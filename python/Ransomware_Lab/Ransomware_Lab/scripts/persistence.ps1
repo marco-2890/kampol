@@ -1,0 +1,1 @@
+Write-Host "Creating harmless scheduled task..."

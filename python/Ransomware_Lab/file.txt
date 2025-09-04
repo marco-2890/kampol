@@ -1,0 +1,12 @@
+Ransomware_Lab/
+├─ dummy_files/           # ไฟล์ dummy (.txt, .docx)
+├─ dummy_logs/            # ไฟล์ log dummy สำหรับฝึก cleanup
+├─ scripts/
+│   ├─ loader.py          # Initial Access Loader (เรียก script encrypt)
+│   ├─ encryptor.py       # Core Encryptor
+│   ├─ key_handler.py     # Key Handling (เก็บ key เป็น JSON)
+│   ├─ persistence.ps1    # สร้าง Task Scheduler (harmless)
+│   ├─ ransom_note.py     # สร้าง Ransom Note
+│   └─ cleanup.py         # ลบ log dummy
+├─ README.md              # คำแนะนำการรัน Lab
+└─ key_store.json         # เก็บ key generated 
