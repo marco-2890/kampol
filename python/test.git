@@ -1,0 +1,3 @@
+
+เปลี่ยน remote origin (ถ้ายังไม่ได้เปลี่ยน):
+git remote set-url origin https://github.com/marco-2890/kampol.git
