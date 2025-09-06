@@ -1,0 +1,121 @@
+import tkinter as tk
+from tkinter import messagebox
+
+def update_layout(left_unit):
+    # ล้าง layout เดิม
+    for widget in frameLeft.winfo_children():
+        widget.destroy()
+    for widget in frameRight.winfo_children():
+        widget.destroy()
+
+    if left_unit == "C":
+        frameLeftLabel = tk.Label(frameLeft, text="เซลเซียส", font=font)
+        frameLeftLabel.pack()
+        txtCelsius.pack(in_=frameLeft, pady=5)
+        frameRightLabel = tk.Label(frameRight, text="ฟาเรนไฮต์", font=font)
+        frameRightLabel.pack()
+        txtFahrenheit.pack(in_=frameRight, pady=5)
+        lblArrow.config(text="→")
+    else:
+        frameLeftLabel = tk.Label(frameLeft, text="ฟาเรนไฮต์", font=font)
+        frameLeftLabel.pack()
+        txtFahrenheit.pack(in_=frameLeft, pady=5)
+        frameRightLabel = tk.Label(frameRight, text="เซลเซียส", font=font)
+        frameRightLabel.pack()
+        txtCelsius.pack(in_=frameRight, pady=5)
+        lblArrow.config(text="←")
+
+def convert_temperature(event=None):
+    c = txtCelsius.get().strip()
+    f = txtFahrenheit.get().strip()
+
+    if c and not f:
+        try:
+            c_val = float(c)
+            f_val = round(c_val * 9/5 + 32, 2)
+            txtFahrenheit.delete(0, tk.END)
+            txtFahrenheit.insert(0, str(f_val))
+            update_layout("C")
+        except ValueError:
+            messagebox.showerror("Error", "กรุณากรอกตัวเลขในช่องเซลเซียส")
+    elif f and not c:
+        try:
+            f_val = float(f)
+            c_val = round((f_val - 32) * 5/9, 2)
+            txtCelsius.delete(0, tk.END)
+            txtCelsius.insert(0, str(c_val))
+            update_layout("F")
+        except ValueError:
+            messagebox.showerror("Error", "กรุณากรอกตัวเลขในช่องฟาเรนไฮต์")
+    elif not c and not f:
+        messagebox.showwarning("Warning", "กรุณากรอกข้อมูลในช่องใดช่องหนึ่ง")
+    else:
+        # ถ้ากรอกทั้งสองช่อง ให้ดูว่าโฟกัสอยู่ที่ช่องไหน
+        focus = root.focus_get()
+        if focus == txtCelsius:
+            convert_temperature_from_celsius()
+        elif focus == txtFahrenheit:
+            convert_temperature_from_fahrenheit()
+
+def convert_temperature_from_celsius():
+    try:
+        c_val = float(txtCelsius.get())
+        f_val = round(c_val * 9/5 + 32, 2)
+        txtFahrenheit.delete(0, tk.END)
+        txtFahrenheit.insert(0, str(f_val))
+        update_layout("C")
+    except ValueError:
+        pass
+
+def convert_temperature_from_fahrenheit():
+    try:
+        f_val = float(txtFahrenheit.get())
+        c_val = round((f_val - 32) * 5/9, 2)
+        txtCelsius.delete(0, tk.END)
+        txtCelsius.insert(0, str(c_val))
+        update_layout("F")
+    except ValueError:
+        pass
+
+def exit_app():
+    root.destroy()
+
+# ---------------- GUI ----------------
+root = tk.Tk()
+root.title("Temperature Converter")
+root.geometry("600x200")
+font = ("Tahoma", 12)
+
+lblTitle = tk.Label(root, text="แปลงอุณหภูมิระหว่างเซลเซียสและฟาเรนไฮต์", font=("Tahoma", 14), fg="blue")
+lblTitle.pack(pady=10)
+
+mainFrame = tk.Frame(root)
+mainFrame.pack()
+
+frameLeft = tk.Frame(mainFrame)
+frameLeft.grid(row=0, column=0, padx=20)
+
+lblArrow = tk.Label(mainFrame, text="→", font=("Tahoma", 14))
+lblArrow.grid(row=0, column=1)
+
+frameRight = tk.Frame(mainFrame)
+frameRight.grid(row=0, column=2, padx=20)
+
+txtCelsius = tk.Entry(root, font=font, width=10)
+txtFahrenheit = tk.Entry(root, font=font, width=10)
+
+txtCelsius.bind("<KeyRelease>", convert_temperature)
+txtFahrenheit.bind("<KeyRelease>", convert_temperature)
+
+update_layout("C")  # เริ่มต้นด้วยเซลเซียสทางซ้าย
+
+btnFrame = tk.Frame(root)
+btnFrame.pack(pady=10)
+
+btnConvert = tk.Button(btnFrame, text="Convert", font=font, command=convert_temperature)
+btnConvert.pack(side=tk.LEFT, padx=20)
+
+btnExit = tk.Button(btnFrame, text="Exit", font=font, command=exit_app)
+btnExit.pack(side=tk.RIGHT, padx=20)
+
+root.mainloop()
